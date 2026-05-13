@@ -1,7 +1,6 @@
 
 library(haven) 
 
-
 # Laster inn datasett og gir det navn masterdata
 masterdata <- read_dta("N:/durable/Project_A/project_A4/7 - Tilrettelagte data/Analysefil.dta")
 
