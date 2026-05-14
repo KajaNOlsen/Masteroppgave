@@ -14,10 +14,10 @@ library(nnet)
 library(tidyr) 
 library(dplyr)
 
-#Statuser som finnes i datasettet
+# Statuser som finnes i datasettet
 seqstatl(masterdata[, 22:32])
 
-#Definerer alfabet - de faktiske verdiene i datasettet som tekst
+# Definerer alfabet
 analysis.alphabet <- c("0", "1", "2", "3", "4", "5", "6")
 
 analysis.labels <- c("(0%)",
@@ -61,7 +61,7 @@ seq_far <- seqdef(masterdata,
 agg_mor <- wcAggregateCases(masterdata[, mor_kolonner])
 agg_far <- wcAggregateCases(masterdata[, far_kolonner])
 
-print(agg_mor)  # Ser hvor mange unike sekvenser som finnes
+print(agg_mor)  
 print(agg_far)
 
 unique_mor_data <- masterdata[agg_mor$aggIndex, mor_kolonner]
@@ -84,12 +84,10 @@ uniqueSeq_far <- seqdef(unique_far_data,
                         xtstep   = 1,
                         x1       = 2012)
 
-
-
 cost_mor <- seqcost(uniqueSeq_mor, method = "INDELSLOG", weighted = TRUE)
 cost_far <- seqcost(uniqueSeq_far, method = "INDELSLOG", weighted = TRUE)
 
-# Beregner avstandsmatriser med Optimal Matching (OM)
+# Beregner avstandsmatriser med optimal matching (OM)
 dist_mor <- seqdist(uniqueSeq_mor, method = "OM",
                     indel = cost_mor$indel, sm = cost_mor$sm)
 
@@ -126,7 +124,7 @@ klynge_far <- pam_far$clustering[[which(pam_far$kvals == 2)]]
 
 
 
-# Plot kvalitetsmal for valv av antall klynger
+# Plot kvalitetsmål for valg av antall klynger
 plot(pam_mor, stat = c("ASWw", "HG", "PBC", "HC"), norm = "zscore",
      main = "Mor: klyngekvalitet")
 plot(pam_far, stat = c("ASWw", "HG", "PBC", "HC"), norm = "zscore",
@@ -137,13 +135,12 @@ plot(pam_far, stat = c("ASWw", "HG", "PBC", "HC"), norm = "zscore",
 summary(pam_mor, max.rank = 5)
 summary(pam_far, max.rank = 5)
 
-# Setter farge for plottene - fargene tilsvarer statusene i rekkefølgen som ble satt over
+# Setter farge for plottene
 cpal(uniqueSeq_mor) <- c("#969696", "#1a9641", "#a6d96a",
                          "#ffffbf", "#fdae61", "#d7191c", "#7b3294")
 cpal(uniqueSeq_far) <- c("#969696", "#1a9641", "#a6d96a",
                          "#ffffbf", "#fdae61", "#d7191c", "#7b3294")
 
-# Tilstandsfordeling over tid per klynge (seqdplot)
 par(mar = c(3, 3, 3, 3))
 
 # Sekvensplott mor - alle tre samlet
@@ -155,12 +152,12 @@ seqdplot(uniqueSeq_mor,
          main = "Mor: inntektsutvikling per klynge",
          ylab = "", xlab = "")
 
-#Sekvensplott mor med riktig navn
+# Sekvensplott mor med riktig navn
 par(mar = c(3, 3, 3, 6))
 
 klynger_mor <- pam_mor$clustering$cluster3
 
-#Plot varig-klyngen
+# Plot varig-klyngen
 seqdplot(uniqueSeq_mor[klynger_mor == 336, ],
          sortv   = sortv(uniqueSeq_mor[klynger_mor == 336, ], start = "beg"),
          border  = NA, cols = 2,
@@ -168,7 +165,7 @@ seqdplot(uniqueSeq_mor[klynger_mor == 336, ],
          main = "Varig-klyngen",
          ylab = "", xlab = "")
 
-#Plot moderat-klyngen
+# Plot moderat-klyngen
 seqdplot(uniqueSeq_mor[klynger_mor == 527, ],
          sortv   = sortv(uniqueSeq_mor[klynger_mor == 527, ], start = "beg"),
          border  = NA, cols = 2,
@@ -176,7 +173,7 @@ seqdplot(uniqueSeq_mor[klynger_mor == 527, ],
          main = "Moderat-klyngen",
          ylab = "", xlab = "")
 
-#Plot referanseklyngen
+# Plot referanseklyngen
 seqdplot(uniqueSeq_mor[klynger_mor == 73, ],
          sortv   = sortv(uniqueSeq_mor[klynger_mor == 73, ], start = "beg"),
          border  = NA, cols = 2,
@@ -185,7 +182,7 @@ seqdplot(uniqueSeq_mor[klynger_mor == 73, ],
          ylab = "", xlab = "")
 
 
-#Plott for far - begge samlet
+# Plott for far - begge samlet
 seqdplot(uniqueSeq_far,
          group   = pam_far$clustering$cluster2,
          sortv   = sortv(uniqueSeq_far, start = "beg"),
@@ -194,10 +191,10 @@ seqdplot(uniqueSeq_far,
          main = "Far: inntektsutvikling per klynge",
          ylab = "", xlab = "")
 
-#Fars klynger med riktige navn
+# Fars klynger med riktige navn
 klynger_far <- pam_far$clustering$cluster2
 
-#Fars moderat-klynge
+# Fars moderat-klynge
 seqdplot(uniqueSeq_far[klynger_far == 315, ],
          sortv   = sortv(uniqueSeq_far[klynger_far == 315, ], start = "beg"),
          border  = NA, cols = 2,
@@ -205,7 +202,7 @@ seqdplot(uniqueSeq_far[klynger_far == 315, ],
          main = "Moderat-klyngen",
          ylab = "", xlab = "")
 
-#Referanseklyngen
+# Referanseklyngen
 seqdplot(uniqueSeq_far[klynger_far == 58, ],
          sortv   = sortv(uniqueSeq_far[klynger_far == 58, ], start = "beg"),
          border  = NA, cols = 2,
@@ -237,7 +234,7 @@ seqmtplot(uniqueSeq_mor,
           main = "Mor: gjennomsnittlig tid per tilstand",
           ylab = "", xlab = "")
 
-# Indeksplott - alle individuelle sekvenser
+# Indeksplott 
 seqiplot(uniqueSeq_mor,
          group   = pam_mor$clustering$cluster3,
          tlim    = 0, border = NA, cols = 2,
@@ -252,28 +249,19 @@ klynge_far <- pam_far$clustering$cluster2
 masterdata$klynge_mor <- klynge_mor[agg_mor$disaggIndex]
 masterdata$klynge_far <- klynge_far[agg_far$disaggIndex]
 
-
-# Sjekk fordelingen av klynger etter aggregering
 table(masterdata$klynge_mor)
-
 table(masterdata$klynge_far)
 
-
-# Konverterer til faktor med riktig referanse
+# Referansekategorien settes til klyngen med høyest inntekt
 masterdata$klynge_mor <- relevel(as.factor(masterdata$klynge_mor), ref = "73")
 masterdata$klynge_far <- relevel(as.factor(masterdata$klynge_far), ref = "58")
 
-
-# Forbereder variabler til regresjon
 tapply(rowMeans(masterdata[, mor_kolonner], na.rm = TRUE),
        masterdata$klynge_mor, mean)
 
-# Referansekategorien settes til klyngen med høyest inntekt
-masterdata$klynge_mor <- relevel(masterdata$klynge_mor, ref = "73")
-masterdata$klynge_far <- relevel(masterdata$klynge_far, ref = "58")
 
 #############################################################################
-#Gir verdiene navn
+# Gir verdiene navn
  
 # Psykososial belastning
 masterdata$forskjell_strain_5 <- factor(
@@ -317,7 +305,6 @@ masterdata$forskjell_inntekt_5 <- factor(
 masterdata$forskjell_inntekt_5 <- relevel(
   masterdata$forskjell_inntekt_5, ref = "(Q4)")
 
-
 ##################################################################################
 
 library(broom)
@@ -333,12 +320,11 @@ pval <- function(mod) {
 # MODELL M1 uten kontrollvariabler
 
 mod1 <- multinom(klynge_mor ~ klynge_far,
-                 data = masterdata)
+                 data = masterdata, trace = FALSE)
 summary(mod1)
 cat("P-verdier modell 1:\n"); print(pval(mod1))
 
-# Krysstabell med enkel beskrivelse av kj??nnsforskjeller
-
+# Krysstabell
 krysstabell_m1 <- table(masterdata$klynge_far, masterdata$klynge_mor)
 prop.table(krysstabell_m1, margin = 1)
 chisq.test(krysstabell_m1)
@@ -346,7 +332,7 @@ chisq.test(krysstabell_m1)
 # MODELL M2
 
 mod2 <- multinom(klynge_mor ~ forskjell_inntekt_5,
-                 data = masterdata)
+                 data = masterdata, trace = FALSE)
 summary(mod2)
 cat("P-verdier modell 2:\n"); print(pval(mod2))
 
@@ -358,7 +344,7 @@ chisq.test(krysstabell_m2)
 # Modell M3
 
 mod3 <- multinom(klynge_mor ~ forskjell_strain_5,
-                 data = masterdata)
+                 data = masterdata, trace = FALSE)
 summary(mod3)
 cat("P-verdier modell 3:\n"); print(pval(mod3))
 
@@ -366,18 +352,18 @@ cat("P-verdier modell 3:\n"); print(pval(mod3))
 # MODELL M4
 
 mod4 <- multinom(klynge_mor ~ forskjell_mekanisk_5,
-                 data = masterdata)
+                 data = masterdata, trace = FALSE)
 summary(mod4)
 cat("P-verdier modell 4:\n"); print(pval(mod4))
 
 # MODELL M5
 
 mod5 <- multinom(klynge_mor ~ forskjell_kryssbelastning_5,
-                 data = masterdata)
+                 data = masterdata, trace = FALSE)
 summary(mod5)
 cat("P-verdier modell 5:\n"); print(pval(mod5))
 
-### MODELL M6
+# MODELL M6
 
 mod6 <- multinom(klynge_far ~ forskjell_kryssbelastning_5,
                  data = masterdata, trace = FALSE)
@@ -406,6 +392,7 @@ masterdata <- masterdata %>%
     forskjell_mekanisk_5 = relevel(as.factor(forskjell_mekanisk_5), ref = "(Q3)"))
 
 # Under lager jeg to ulike sett med kontrollvariabler
+
 # Kontrollvariabler for modell M1 og M2
 kontroller_full <- "+ utd_nivaa_mor + utd_nivaa_far + 
                     innvandrer_mor + innvandrer_far + 
@@ -484,7 +471,7 @@ cat("P-verdier modell 6k:\n"); print(pval(mod6k))
 
 #########################
 
-#Samle alle modellene i felles tabeller
+# Samle alle modellene i felles tabeller
 
 library(stargazer)
 
@@ -497,8 +484,7 @@ stargazer(
   digits = 3,
   star.cutoffs = c(0.05, 0.01, 0.001),
   keep.stat = c("n", "aic"),
-  no.space = TRUE
-)
+  no.space = TRUE)
 
 # Tabell 2: modell M3, M4 og M5
 stargazer(
@@ -509,8 +495,7 @@ stargazer(
   digits = 3,
   star.cutoffs = c(0.05, 0.01, 0.001),
   keep.stat = c("n", "aic"),
-  no.space = TRUE
-  )
+  no.space = TRUE)
 
 # Tabell 3: modell M6
 stargazer(
@@ -521,8 +506,7 @@ stargazer(
   digits = 3,
   star.cutoffs = c(0.05, 0.01, 0.001),
   keep.stat = c("n", "aic"),
-  no.space = TRUE
-)
+  no.space = TRUE)
 
 # Tabell 4: modell M7
 stargazer(
@@ -533,8 +517,7 @@ stargazer(
   digits = 3,
   star.cutoffs = c(0.05, 0.01, 0.001),
   keep.stat = c("n", "aic"),
-  no.space = TRUE
-)
+  no.space = TRUE)
 
 # Tabell 5: modell M8
 stargazer(
@@ -545,12 +528,11 @@ stargazer(
   digits = 3,
   star.cutoffs = c(0.05, 0.01, 0.001),
   keep.stat = c("n", "aic"),
-  no.space = TRUE
-)
+  no.space = TRUE)
 
 
 ##############################################################################
-#MODELLER TIL GJENNOMSNITTLIGE MARGINALE EFFEKTER (AME)
+# MODELLER TIL GJENNOMSNITTLIGE MARGINALE EFFEKTER (AME)
 
 library(marginaleffects)
 
@@ -648,7 +630,7 @@ gme_mod5k |>
                      "yrkinntekt_mor_2009_t", "yrkinntekt_far_2009_t"))
 
 ###################################################################################
-#Lager tabell for del to av masteren
+# Lager tabell for del to av masteren
 
 #Tabell modell M6
 tabell_m6 <- gme_mod6k |>
@@ -676,7 +658,6 @@ tabell_m6 |>
     p.value = "p-verdi",
     stars = "") |>
   gtsave("tabell_m6.docx")
-
 
 ###############################################################
 #APPENDIKSER
